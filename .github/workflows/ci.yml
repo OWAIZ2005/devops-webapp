@@ -32,3 +32,13 @@ jobs:
 
       - name: CI Success
         run: echo "CI Pipeline completed successfully!"
+
+      - name: Send Slack Success Notification
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"CI Pipeline Successful! Repository: devops-webapp | Branch: main | Status: SUCCESS"}' "${{ secrets.SLACK_WEBHOOK_URL }}"
+
+      - name: Send Slack Failure Notification
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"CI Pipeline Failed! Repository: devops-webapp | Branch: main | Status: FAILED"}' "${{ secrets.SLACK_WEBHOOK_URL }}"
